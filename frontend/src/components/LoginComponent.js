@@ -31,7 +31,7 @@ const Login = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/admin/login', loginInfo);
+      const response = await axios.post('/signup', loginInfo);
       const { data } = response;
 
       if (data.success) {
