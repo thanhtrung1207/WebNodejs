@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import './Login.css'; // Import file CSS
+import './login.css'; // Import file CSS
 
 const Login = () => {
   const [isChecked, setIsChecked] = useState(false);
@@ -31,7 +31,7 @@ const Login = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/signup', loginInfo);
+      const response = await axios.post('/api/signup', loginInfo);
       const { data } = response;
 
       if (data.success) {
