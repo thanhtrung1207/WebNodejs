@@ -22,16 +22,29 @@ const Login = () => {
     setLoginInfo({ ...loginInfo, [name]: value });
   };
 
-  const handleSignupSubmit = (e) => {
+  const handleSignupSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign up logic here
+    try {
+      const response = await axios.post('/api/signup', signupInfo);
+      const { data } = response;
+
+      if (data.success) {
+        setMessage('Signup successful');
+        // Có thể thêm logic để chuyển hướng người dùng hoặc lưu trữ token nếu cần thiết
+        localStorage.setItem('token', data.data);
+      } else {
+        setMessage(data.message);
+      }
+    } catch (error) {
+      setMessage('An error occurred. Please try again.');
+    }
     console.log('Sign up info:', signupInfo);
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/signup', loginInfo);
+      const response = await axios.post('/api/signin', loginInfo);
       const { data } = response;
 
       if (data.success) {
@@ -99,6 +112,7 @@ const Login = () => {
             value={loginInfo.password}
             onChange={handleLoginChange}
           />
+          
           <button type="submit">Login</button>
         </form>
         {message && <p>{message}</p>}

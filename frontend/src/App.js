@@ -1,14 +1,14 @@
-import logo from './logo.svg';
 import './App.css';
-import React from 'react';
-import Login from './components/LoginComponent'; 
+import React, { Component } from 'react';
+import Login from './components/LoginComponent';
 
-function App() {
-  return (
-    <div className="App">
-       <Login />
-    </div>
-  );
+
+
+class App extends Component {
+  render() {
+    return (
+        <Login />
+    );
+  }
 }
-
 export default App;
