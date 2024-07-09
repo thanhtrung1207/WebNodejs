@@ -1,12 +1,20 @@
-import axios from 'axios';
 import React, { useState } from 'react';
-import './login.css'; // Import file CSS
+import './login.css'; // Import CSS file
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 const Login = () => {
   const [isChecked, setIsChecked] = useState(false);
-  const [signupInfo, setSignupInfo] = useState({ username: '', email: '', password: '' });
-  const [loginInfo, setLoginInfo] = useState({ email: '', password: '' });
   const [message, setMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState({
+    email: "",
+    password: ""
+  });
+  const [dataSignup, setDataSignup] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
@@ -14,46 +22,61 @@ const Login = () => {
 
   const handleSignupChange = (e) => {
     const { name, value } = e.target;
-    setSignupInfo({ ...signupInfo, [name]: value });
+    setDataSignup((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleLoginChange = (e) => {
     const { name, value } = e.target;
-    setLoginInfo({ ...loginInfo, [name]: value });
-  };
-
-  const handleSignupSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post('/api/signup', signupInfo);
-      const { data } = response;
-
-      if (data.success) {
-        setMessage('Signup successful');
-        // Có thể thêm logic để chuyển hướng người dùng hoặc lưu trữ token nếu cần thiết
-        localStorage.setItem('token', data.data);
-      } else {
-        setMessage(data.message);
-      }
-    } catch (error) {
-      setMessage('An error occurred. Please try again.');
-    }
-    console.log('Sign up info:', signupInfo);
+    setData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/signin', loginInfo);
-      const { data } = response;
+      const response = await fetch('http://localhost:5001/api/signin', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
 
-      if (data.success) {
-        setMessage('Login successful');
-        // Handle storing token and redirecting user here
-        // For example, you can store the token in local storage
-        localStorage.setItem('token', data.data);
+      const dataApi = await response.json();
+
+      if (dataApi.success) {
+        setMessage('Login successful!');
       } else {
-        setMessage(data.message);
+        setMessage(dataApi.message);
+      }
+    } catch (error) {
+      setMessage('An error occurred. Please try again.');
+    }
+  };
+
+  const handleSignupSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:5001/api/signup', {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dataSignup)
+      });
+
+      const dataApi = await response.json();
+
+      if (dataApi.success) {
+        setMessage('User created successfully!');
+      } else {
+        setMessage(dataApi.message);
       }
     } catch (error) {
       setMessage('An error occurred. Please try again.');
@@ -68,10 +91,10 @@ const Login = () => {
           <label htmlFor="chk" aria-hidden="true">Sign up</label>
           <input
             type="text"
-            name="username"
+            name="name"
             placeholder="User name"
             required
-            value={signupInfo.username}
+            value={dataSignup.name}
             onChange={handleSignupChange}
           />
           <input
@@ -79,17 +102,22 @@ const Login = () => {
             name="email"
             placeholder="Email"
             required
-            value={signupInfo.email}
+            value={dataSignup.email}
             onChange={handleSignupChange}
           />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
             required
-            value={signupInfo.password}
+            value={dataSignup.password}
             onChange={handleSignupChange}
           />
+          <div className='cursor-pointer text-xl' onClick={() => setShowPassword((prev) => !prev)}>
+            <span>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
           <button type="submit">Sign up</button>
         </form>
       </div>
@@ -101,18 +129,22 @@ const Login = () => {
             name="email"
             placeholder="Email"
             required
-            value={loginInfo.email}
+            value={data.email}
             onChange={handleLoginChange}
           />
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Password"
             required
-            value={loginInfo.password}
+            value={data.password}
             onChange={handleLoginChange}
           />
-          
+          <div className='cursor-pointer text-xl' onClick={() => setShowPassword((prev) => !prev)}>
+            <span>
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
           <button type="submit">Login</button>
         </form>
         {message && <p>{message}</p>}
