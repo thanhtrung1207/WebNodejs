@@ -6,7 +6,7 @@ import Login from './components/LoginComponent';
 class App extends Component {
   render() {
     return (
-        <Login />
+        <App />
         // <Menu />
     );
   }

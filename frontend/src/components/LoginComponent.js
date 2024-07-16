@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './login.css'; // Import CSS file
 import { FaEyeSlash, FaEye } from "react-icons/fa";
+// import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
+  // const navigate=useNavigate();
   const [isChecked, setIsChecked] = useState(false);
   const [message, setMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -39,7 +41,7 @@ const Login = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/signin', {
+      const response = await fetch('http://localhost:1111/api/signin', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -52,6 +54,7 @@ const Login = () => {
 
       if (dataApi.success) {
         setMessage('Login successful!');
+        // navigate("/");
       } else {
         setMessage(dataApi.message);
       }
@@ -63,7 +66,7 @@ const Login = () => {
   const handleSignupSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/api/signup', {
+      const response = await fetch('http://localhost:1111/api/signup', {
         method: 'POST',
         headers: {
           "Content-Type": "application/json"

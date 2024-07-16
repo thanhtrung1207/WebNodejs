@@ -18,10 +18,10 @@ async function userSignInController(req,res){
        if(!user){
             throw new Error("User not found")
        }
-       console.log(user.password)
+      
        const checkPassword = await bcrypt.compare(password,user.password)
 
-       console.log("checkPassoword",checkPassword)
+       console.log("checkPassword",checkPassword)
 
        if(checkPassword){
         const tokenData = {
@@ -44,12 +44,6 @@ async function userSignInController(req,res){
        }else{
          throw new Error("Please check Password")
        }
-
-
-
-
-
-
 
     }catch(err){
         res.json({
